@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatBangServices implements IMatBangServices{
-    private final List<MatBang> matBangList = new ArrayList<>();
 
     @Override
     public boolean addMatBang(MatBang matBang) {
@@ -40,7 +39,7 @@ public class MatBangServices implements IMatBangServices{
     public List<MatBang> getAllMatBangs() {
         Connection connection = DatabaseConnection.getConnection();
         PreparedStatement preparedStatement = null;
-
+        List<MatBang> matBangList = new ArrayList<>();
         String query = "SELECT * FROM mat_bang";
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -91,8 +90,37 @@ public class MatBangServices implements IMatBangServices{
 
     @Override
     public boolean updateMatBang(MatBang matBang) {
-        return false;
+        Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement preparedStatement = null;
+        String query = "UPDATE mat_bang SET trang_thai=?, dien_tich=?, tang=?, loai_mat_bang=?, gia_tien=?, ngay_bat_dau=?, ngay_ket_thuc=? WHERE ma_mat_bang=?";
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, matBang.getTrangThai().toString());
+            preparedStatement.setInt(2, matBang.getDienTich());
+            preparedStatement.setInt(3, matBang.getTang());
+            preparedStatement.setString(4, matBang.getLoaiMatBang().toString());
+            preparedStatement.setDouble(5, matBang.getPrice());
+            preparedStatement.setDate(6, Date.valueOf(matBang.getNgayBatDau()));
+            preparedStatement.setDate(7, Date.valueOf(matBang.getNgayKetThuc()));
+            preparedStatement.setString(8, matBang.getMaMatBang());
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     @Override
     public List<MatBang> finMatBangs(String maMatBang, Integer tang, Double price) {

@@ -88,21 +88,21 @@
     <c:forEach items="${matBangs}" var="c">
       <tr>
         <td>${c.maMatBang}</td>
-        <td>${c.trangThai}</td>
+        <td>${c.trangThai.toString()}</td>
         <td>${c.dienTich}</td>
         <td>${c.tang}</td>
-        <td>${c.loaiMatBang}</td>
+        <td>${c.loaiMatBang.toString()}</td>
         <td>${c.price}</td>
         <td>${c.ngayBatDau}</td>
         <td>${c.ngayKetThuc}</td>
-        <td>Edit</td>
+
 
         <td>
-          <form action="matbang?action=edit" method="post" style="display: inline">
-            <input type="hidden" name="editMatbang" value="">
-
-          </form>
+          <button onclick="window.location.href='edit.jsp?maMatBang=${c.maMatBang}&trangThai=${c.trangThai.toString()}&dienTich=${c.dienTich}&tang=${c.tang}&loaiMatBang=${c.loaiMatBang.toString()}&price=${c.price}&ngayBatDau=${c.ngayBatDau}&ngayKetThuc=${c.ngayKetThuc}'">Edit</button>
         </td>
+
+
+
         <td>
           <form action="matbang?action=delete" method="post" style="display:inline;">
             <input type="hidden" name="maMatBang" value="${c.maMatBang}">

@@ -41,11 +41,13 @@ public class PhucHopPhong extends HttpServlet {
     }
 
     private void showList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("/list.jsp");
+
         List<MatBang> matBangs = iMatBangServices.getAllMatBangs();
         req.setAttribute("matBangs", matBangs);
-        rd.forward(req,resp);
+        RequestDispatcher rd = req.getRequestDispatcher("/list.jsp");
+        rd.forward(req, resp);
     }
+
 
 
 
@@ -59,18 +61,44 @@ public class PhucHopPhong extends HttpServlet {
                 break;
             case "search":
                 handSearch(req,resp);
+                break;
             case "delete":
                 handDelete(req, resp);
                 break;
+            case "edit":
+                handEdit(req,resp);
+                break;
+                    
 
         }
 
+    }
+
+    private void handEdit(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        String maMatBang = req.getParameter("maMatBang");
+        String trangThai = req.getParameter("trangThai");
+        int dienTich = Integer.parseInt(req.getParameter("dienTich"));
+        int tang = Integer.parseInt(req.getParameter("tang"));
+        String loaiMatBang = req.getParameter("loaiMatBang");
+        double giaTien = Double.parseDouble(req.getParameter("giaTien"));
+        LocalDate ngayBatDau = LocalDate.parse(req.getParameter("ngayBatDau"));
+        LocalDate ngayKetThuc = LocalDate.parse(req.getParameter("ngayKetThuc"));
+
+        String trangThaiuf8 = new String(trangThai.getBytes("ISO-8859-1"), "UTF-8");
+        String loaiMatBanguf8 = new String(loaiMatBang.getBytes("ISO-8859-1"), "UTF-8");
+
+        MatBang matBang = new MatBang(maMatBang, TrangThai.fromString(trangThaiuf8),dienTich,tang,LoaiMatBang.fromString(loaiMatBanguf8),giaTien,ngayBatDau,ngayKetThuc);
+        iMatBangServices.updateMatBang(matBang);
+
+        resp.sendRedirect("matbang?action=list");
     }
 
 
     private void handDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String maMatBang = req.getParameter("maMatBang");
         iMatBangServices.deleteMaMatBang(maMatBang);
+        resp.sendRedirect("matbang?action=list");
 
     }
 
