@@ -68,8 +68,9 @@ public class PhucHopPhong extends HttpServlet {
     }
 
 
-    private void handDelete(HttpServletRequest req, HttpServletResponse resp) {
+    private void handDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String maMatBang = req.getParameter("maMatBang");
+        iMatBangServices.deleteMaMatBang(maMatBang);
 
     }
 
@@ -81,12 +82,9 @@ public class PhucHopPhong extends HttpServlet {
             double giaTien = Double.parseDouble(req.getParameter("giaTien"));
 
             List<MatBang> searchResults = iMatBangServices.finMatBangs(maMatBang, tang, giaTien);
-
             req.setAttribute("matBangs", searchResults);
-
             RequestDispatcher dispatcher = req.getRequestDispatcher("/list.jsp");
             dispatcher.forward(req, resp);
-
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -107,12 +105,10 @@ public class PhucHopPhong extends HttpServlet {
             LocalDate ngayBatDau = LocalDate.parse(req.getParameter("ngayBatDau"));
             LocalDate ngayKetThuc = LocalDate.parse(req.getParameter("ngayKetThuc"));
 
-
             String trangThaiuf8 = new String(trangThai.getBytes("ISO-8859-1"), "UTF-8");
             String loaiMatBanguf8 = new String(loaiMatBang.getBytes("ISO-8859-1"), "UTF-8");
 
             MatBang matBang = new MatBang(maMatBang, TrangThai.fromString(trangThaiuf8),dienTich,tang,LoaiMatBang.fromString(loaiMatBanguf8),giaTien,ngayBatDau,ngayKetThuc);
-
             iMatBangServices.addMatBang(matBang);
 
         } catch (Exception ex) {

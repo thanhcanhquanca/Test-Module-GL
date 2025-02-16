@@ -7,9 +7,7 @@ import codegym.c10.testbookings.utils.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MatBangServices implements IMatBangServices{
     private final List<MatBang> matBangList = new ArrayList<>();
@@ -74,7 +72,21 @@ public class MatBangServices implements IMatBangServices{
 
     @Override
     public boolean deleteMaMatBang(String maMatBang) {
-        return false;
+        Connection connection = DatabaseConnection.getConnection();
+        PreparedStatement preparedStatement = null;
+
+        String query = "DELETE FROM mat_bang WHERE ma_mat_bang = ?";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, maMatBang);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -88,7 +100,6 @@ public class MatBangServices implements IMatBangServices{
         List<MatBang> matBangList = new ArrayList<>();
         StringBuilder query = new StringBuilder("SELECT * FROM mat_bang WHERE 1=1");
 
-        // Danh sách tham số
         List<Object> params = new ArrayList<>();
 
         if (maMatBang != null && !maMatBang.trim().isEmpty()) {

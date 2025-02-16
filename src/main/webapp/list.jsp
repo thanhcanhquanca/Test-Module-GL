@@ -95,8 +95,21 @@
         <td>${c.price}</td>
         <td>${c.ngayBatDau}</td>
         <td>${c.ngayKetThuc}</td>
-        <td href="mabang?action=delete" ${c.maMatBang}>Edit</td>
-        <td>Delete</td>
+        <td>Edit</td>
+
+        <td>
+          <form action="matbang?action=edit" method="post" style="display: inline">
+            <input type="hidden" name="editMatbang" value="">
+
+          </form>
+        </td>
+        <td>
+          <form action="matbang?action=delete" method="post" style="display:inline;">
+            <input type="hidden" name="maMatBang" value="${c.maMatBang}">
+            <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa không?');">Delete</button>
+          </form>
+        </td>
+
       </tr>
 
     </c:forEach>
